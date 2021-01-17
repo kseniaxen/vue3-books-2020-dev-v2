@@ -65,6 +65,7 @@ el-dialog(
     :startBookEdit="() => startBookEdit(state.selectedBook.id)"
     :startBookDelete="() => startBookDelete(state.selectedBook.id)"
     :startBookShare="() => startBookShare(state.selectedBook.id)"
+    :type="typeName"
   )
 //- заголовок раздела с кнопкой открытия диалога добавления новой книги
 //- и с кнопкой открытия панели фильтра
@@ -91,7 +92,7 @@ el-row(type="flex" justify="center" align="center")
                 div.image-slot
                   img.card-image(src="../assets/no_image.png")
           el-col(:span="14" v-bind:style="{ 'align-self': 'start', 'text-align': 'left' }")
-            h3(@click="() => onBookClicked(book)")
+            h3(v-bind:style="{'cursor': 'pointer'}" @click="() => onBookClicked(book)")
               span {{book.title}}
               span(v-if='book.volumeOrIssue') &nbsp;({{book.volumeOrIssue}})
             h4(v-if='book.author') автор: {{book.author}}
@@ -209,6 +210,8 @@ export default {
         'value': item.id
        }}
     )) 
+
+    const typeName = computed(()=> store.getters.types.find(item=> item.id === state.selectedBook.type).name)
     /* watch(books, (newValue) => {
       if (newValue.length > 0){
         state.isSuggestionsShown = true
@@ -566,7 +569,7 @@ export default {
     return {
       state, // state
       suggestedCountries, suggestedCities, selectedImage,
-      currentBookType, books, typeOptions, // computed
+      currentBookType, books, typeOptions, typeName, // computed
       countryItemSelected, countryInputChange,
       cityItemSelected, cityInputChange,
       yearInputChange,
